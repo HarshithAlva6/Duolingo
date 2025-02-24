@@ -83,11 +83,11 @@ def scrap_div():
         print("Logged in, waiting for profile tab...")
         try:
             print(driver.page_source)
-
+            driver.save_screenshot("debug_2_after_login.png")
             print("Waiting for the page to fully load...")
             WebDriverWait(driver, 40).until(lambda d: d.execute_script("return document.readyState") == "complete")
             print("Page loaded.")
-            
+            driver.save_screenshot("debug_3_after_load.png")
             print("Waiting for the profile tab to be present...")
             profile_link = WebDriverWait(driver, 40).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='profile-tab']"))
