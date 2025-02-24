@@ -80,7 +80,10 @@ def scrap_div():
         time.sleep(10)
 
         print("Logged in, waiting for profile tab...")
-        profile_link = driver.find_element(By.CSS_SELECTOR, "[data-test='profile-tab']")  
+        profile_link = WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-test='profile-tab']"))
+        )
+        #profile_link = driver.find_element(By.CSS_SELECTOR, "[data-test='profile-tab']")  
         profile_link.click()
         time.sleep(5)
 
