@@ -74,9 +74,9 @@ def scrap_div():
         )
 
         email.send_keys(DUOLINGO_EMAIL)
-        time.sleep(1)
+        time.sleep(10)
         password.send_keys(DUOLINGO_PASSWORD)
-        time.sleep(5)
+        time.sleep(10)
         password.send_keys(Keys.RETURN) 
 
         time.sleep(10)
