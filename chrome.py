@@ -42,6 +42,7 @@ def scrap_div():
     options.add_argument("--window-size=1920,1080")  
     options.add_argument("--start-maximized")
     options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
+    options.add_argument("--disable-software-rasterizer")
     load_dotenv(override=True)
 
     #chromedriver_path = "./ChromeDriver/chromedriver.exe" 
@@ -77,6 +78,13 @@ def scrap_div():
         time.sleep(10)
         password.send_keys(DUOLINGO_PASSWORD)
         time.sleep(10)
+        # Trigger 'input' event (sufficient for most cases)
+        driver.execute_script("arguments[0].dispatchEvent(new Event('input'));", email)
+        driver.execute_script("arguments[0].dispatchEvent(new Event('input'));", password)
+
+        # Optionally trigger 'change' event if needed (in cases where the form listens for change events)
+        driver.execute_script("arguments[0].dispatchEvent(new Event('change'));", email)
+        driver.execute_script("arguments[0].dispatchEvent(new Event('change'));", password)
         password.send_keys(Keys.RETURN) 
 
         time.sleep(10)
