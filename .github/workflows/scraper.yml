@@ -1,0 +1,44 @@
+name: Scrape Duolingo Data
+
+on:
+  schedule:
+    - cron: '0 6 * * *' 
+  workflow_dispatch:  
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+          - name: Set Up Chromedriver from Repo
+        run: |
+          chmod +x ./ChromeDriver/chromedriver.exe 
+          sudo ln -s $PWD/ChromeDriver/chromedriver.exe /usr/bin/chromedriver
+
+      - name: Run Scraper Script
+        env:
+          DUOLINGO_EMAIL: ${{ secrets.DUOLINGO_EMAIL }}
+          DUOLINGO_PASSWORD: ${{ secrets.DUOLINGO_PASSWORD }}
+        run: |
+          python chrome.py
