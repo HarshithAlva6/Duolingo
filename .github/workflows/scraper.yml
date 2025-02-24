@@ -56,8 +56,6 @@ jobs:
         run: |
           google-chrome --version
           chromedriver --version
-          which chromedriver
-          sudo mv chromedriver /usr/bin/
           sudo chmod +x /usr/bin/chromedriver
           sudo chmod +x /usr/bin/google-chrome
 
