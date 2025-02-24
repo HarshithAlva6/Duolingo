@@ -50,6 +50,7 @@ def scrap_div():
     #service = Service(executable_path="/usr/local/bin/chromedriver")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
+    driver.delete_all_cookies()
 
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
