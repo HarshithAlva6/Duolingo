@@ -17,6 +17,7 @@ from datetime import datetime
 import pytz
 import time
 import json
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 #app = Flask(__name__)
@@ -53,7 +54,6 @@ def scrap_div():
 
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
-
     try:
         print("Opening Duolingo website...")
         driver.get("https://www.duolingo.com")
@@ -73,18 +73,15 @@ def scrap_div():
         password = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='password-input']"))
         )
+        actions = ActionChains(driver)
 
+        actions.move_to_element(email).click().perform()
+        time.sleep(5)
         email.send_keys(DUOLINGO_EMAIL)
         time.sleep(10)
+        actions.move_to_element(password).click().perform()
+        time.sleep(5)
         password.send_keys(DUOLINGO_PASSWORD)
-        time.sleep(10)
-        # Trigger 'input' event (sufficient for most cases)
-        driver.execute_script("arguments[0].dispatchEvent(new Event('input'));", email)
-        driver.execute_script("arguments[0].dispatchEvent(new Event('input'));", password)
-        time.sleep(10)
-        # Optionally trigger 'change' event if needed (in cases where the form listens for change events)
-        driver.execute_script("arguments[0].dispatchEvent(new Event('change'));", email)
-        driver.execute_script("arguments[0].dispatchEvent(new Event('change'));", password)
         time.sleep(10)
         password.send_keys(Keys.RETURN) 
 
