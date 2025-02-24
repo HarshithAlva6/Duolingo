@@ -83,22 +83,22 @@ def scrap_div():
             print(driver.page_source)
 
             print("Waiting for the page to fully load...")
-            WebDriverWait(driver, 40).until(lambda d: d.execute_script("return document.readyState") == "complete")
+            WebDriverWait(driver, 200).until(lambda d: d.execute_script("return document.readyState") == "complete")
             print("Page loaded.")
-            
+
             print("Waiting for the profile tab to be present...")
-            profile_link = WebDriverWait(driver, 40).until(
+            profile_link = WebDriverWait(driver, 100).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='profile-tab']"))
             )
             print("Profile tab located.")
-            
+
             print("Scrolling into view...")
             driver.execute_script("arguments[0].scrollIntoView();", profile_link)
-            
+
             print("Clicking the profile tab...")
             driver.execute_script("arguments[0].click();", profile_link)
             print("Profile tab clicked.")
-            
+
             time.sleep(2)
         except Exception as e:
             print("Profile tab not found in time", e)
