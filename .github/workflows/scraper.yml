@@ -77,6 +77,8 @@ jobs:
 
       - name: Commit and push the updated stats.json to stats
         run: |
+          git config user.email "harshalva.titan@csu.fullerton.edu"
+          git config user.name "Harshith"
           git add stats.json
           git commit -m "Update stats.json"
           git push origin main
