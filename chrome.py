@@ -78,13 +78,9 @@ def scrap_div():
         password.send_keys(Keys.RETURN) 
 
         time.sleep(10)
-
-        print("Logged in, waiting for full page...")
-        WebDriverWait(driver, 30).until(
-            lambda d: d.execute_script('return document.readyState') == 'complete'
-        )
         print("Logged in, waiting for profile tab...")
         try:
+            print(driver.page_source)
             profile_link = WebDriverWait(driver, 40).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='profile-tab']"))
             )
