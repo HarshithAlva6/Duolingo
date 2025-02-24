@@ -111,7 +111,9 @@ def getStats():
             if stats:
                 freshdata = {"timestamp": time.time(), "stats": stats}
                 redis_client.set("duolingo", json.dumps(freshdata))
-                print("Fresh data fetched and cached.")
+                with open("stats.json", "w") as file:
+                    json.dump(freshdata, file)
+                print("Fresh data fetched, cached and saved to file.")
             else:
                 print("Failed to fetch fresh data.")
         else:
@@ -121,7 +123,9 @@ def getStats():
         stats = scrap_div()
         if stats:
             freshdata = {"timestamp": time.time(), "stats": stats}
-            redis_client.set("duolingo", json.dumps(freshdata))  # No expiration time needed
+            redis_client.set("duolingo", json.dumps(freshdata))  
+            with open("stats.json", "w") as file:
+                json.dump(freshdata, file)
             print("Fresh data fetched and cached.")
         else:
             print("Failed to fetch fresh data.")
