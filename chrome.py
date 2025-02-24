@@ -44,25 +44,25 @@ def scrap_div():
 
     try:
         driver.get("https://www.duolingo.com")
-        already_have_account_button = WebDriverWait(driver, 10).until(
+        account = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='have-account']"))
         )
-        already_have_account_button.click()
+        account.click()
 
         time.sleep(3)
 
-        email_input = WebDriverWait(driver, 10).until(
+        email = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='email-input']"))
             )
-        password_input = WebDriverWait(driver, 10).until(
+        password = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='password-input']"))
         )
 
-        email_input.send_keys(DUOLINGO_EMAIL)
+        email.send_keys(DUOLINGO_EMAIL)
         time.sleep(1)
-        password_input.send_keys(DUOLINGO_PASSWORD)
+        password.send_keys(DUOLINGO_PASSWORD)
         time.sleep(5)
-        password_input.send_keys(Keys.RETURN) 
+        password.send_keys(Keys.RETURN) 
 
         time.sleep(10)
 
