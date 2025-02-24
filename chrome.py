@@ -32,8 +32,8 @@ def past_midnight(time):
 
 def scrap_div():
     options = Options()
-    options.headless = False
-    options.binary_location = "/usr/bin/google-chrome" 
+    #options.headless = False
+    #options.binary_location = "/usr/bin/google-chrome" 
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")  
     options.add_argument("--disable-dev-shm-usage")  
