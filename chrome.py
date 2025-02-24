@@ -94,7 +94,10 @@ def scrap_div():
 
         # Print again to ensure it was correctly set
         print("Password after events:", password.get_attribute("value"))
-
+        if password.get_attribute("value") == DUOLINGO_PASSWORD:
+            print("Password entered correctly!")
+        else:
+            print("Password mismatch!")
         # Wait for login button to be clickable
         login_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='register-button']"))
