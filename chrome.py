@@ -71,42 +71,33 @@ def scrap_div():
         email = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='email-input']")))
         password = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='password-input']")))
 
-        # Click and enter email
         email.send_keys(DUOLINGO_EMAIL)
-        # Wait for email to be set properly
         WebDriverWait(driver, 10).until(lambda driver: email.get_attribute("value") == DUOLINGO_EMAIL)
 
         # Trigger email input events
         driver.execute_script("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", email)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", email)
 
-        # Send password
         password.send_keys(DUOLINGO_PASSWORD)
-        # Wait for password to be set properly
         WebDriverWait(driver, 10).until(lambda driver: password.get_attribute("value") == DUOLINGO_PASSWORD)
 
         # Print password value for debugging
         print("Entered password:", password.get_attribute("value"))
 
-        # Trigger password input events
         driver.execute_script("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", password)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", password)
 
-        # Print again to ensure it was correctly set
         print("Password after events:", password.get_attribute("value"))
         if password.get_attribute("value") == DUOLINGO_PASSWORD:
             print("Password entered correctly!")
         else:
             print("Password mismatch!")
-        # Wait for login button to be clickable
         login_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='register-button']"))
         )
 
-        # Click the login button
         login_button.click()
         driver.save_screenshot("debug_after_click.png")
-        # Wait for page to load
         WebDriverWait(driver, 40).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
         # Save a screenshot
@@ -117,7 +108,6 @@ def scrap_div():
         print("Logged in, waiting for profile tab...")
         try:
             print(driver.page_source)
-            driver.save_screenshot("debug_2_after_login.png")
             print("Waiting for the page to fully load...")
             WebDriverWait(driver, 40).until(lambda d: d.execute_script("return document.readyState") == "complete")
             print("Page loaded.")

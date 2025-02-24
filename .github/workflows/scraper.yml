@@ -77,9 +77,12 @@ jobs:
 
       - name: Commit and push the updated stats.json to stats
         run: |
+          git add stats.json
+          git commit -m "Update stats.json"
+          git push origin main
           git fetch origin stats
           git checkout stats
-          cp stats.json ./stats.json 
+          cp stats.json ./stats_new.json 
           git add stats.json
           git commit -m "Updated stats.json"
           git push origin stats
