@@ -69,12 +69,12 @@ jobs:
       - name: List files in the working directory
         run: |
           ls -alh
-          
+
       - name: Commit and push the updated stats.json to gh-pages
         run: |
           git fetch origin stats
           git checkout stats
-          cp ./stats.json ./stats.json 
+          cp stats.json ./stats.json 
           git add stats.json
           git commit -m "Updated stats.json"
           git push origin stats
