@@ -68,9 +68,9 @@ jobs:
 
       - name: Commit and push the updated stats.json to gh-pages
         run: |
-          git checkout gh-pages
+          git checkout stats
           cp path/to/generated/stats.json ./stats.json  # Replace with correct path
           git add stats.json
           git commit -m "Updated stats.json"
-          git push origin gh-pages
+          git push origin stats
 
