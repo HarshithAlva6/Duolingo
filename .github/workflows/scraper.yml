@@ -31,7 +31,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-          - name: Set Up Chromedriver from Repo
+      - name: Set Up Chromedriver from Repo
         run: |
           chmod +x ./ChromeDriver/chromedriver.exe 
           sudo ln -s $PWD/ChromeDriver/chromedriver.exe /usr/bin/chromedriver

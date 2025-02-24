@@ -31,7 +31,7 @@ def past_midnight(time):
 
 def scrap_div():
     options = Options()
-    #options.headless = True 
+    options.headless = True 
     load_dotenv(override=True)
 
     chromedriver_path = "./ChromeDriver/chromedriver.exe" 
