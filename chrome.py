@@ -8,18 +8,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import os
 import redis
-import webbrowser
+#import webbrowser
 from dotenv import load_dotenv
-from flask import Flask, jsonify
-from flask_cors import CORS
+#from flask import Flask, jsonify
+#from flask_cors import CORS
 from datetime import datetime
 import pytz
 import time
 import json
 
 
-app = Flask(__name__)
-CORS(app)
+#app = Flask(__name__)
+#CORS(app)
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 CST = pytz.timezone("America/Chicago")
 
@@ -31,7 +31,7 @@ def past_midnight(time):
 
 def scrap_div():
     options = Options()
-    options.headless = False 
+    options.headless = True
     load_dotenv(override=True)
 
     chromedriver_path = "./ChromeDriver/chromedriver.exe" 
@@ -91,23 +91,35 @@ def scrap_div():
         driver.quit() 
         print("Driver closed.")
 
-@app.route('/duolingo', methods=['GET'])
+#@app.route('/duolingo', methods=['GET'])
 def getStats():
     cache = redis_client.get("duolingo")
     if cache:
         data = json.loads(cache)
         lastTime = data.get("timestamp",0)
-        if not past_midnight(lastTime):
-            return jsonify(data)
-    stats = scrap_div()
-    if stats:
-        freshdata = {"timestamp": time.time(), "stats": stats}
-        redis_client.set("duolingo", json.dumps(freshdata))
-        return jsonify(freshdata)
-    return jsonify({"error": "Failed to retrieve data"}), 500
+        if past_midnight(lastTime):
+            stats = scrap_div()
+            if stats:
+                freshdata = {"timestamp": time.time(), "stats": stats}
+                redis_client.set("duolingo", json.dumps(freshdata))
+                print("Fresh data fetched and cached.")
+            else:
+                print("Failed to fetch fresh data.")
+        else:
+            print("Data is still valid, using cached data.")
+    else:
+        print("No cached data found, fetching fresh data...")
+        stats = scrap_div()
+        if stats:
+            freshdata = {"timestamp": time.time(), "stats": stats}
+            redis_client.set("duolingo", json.dumps(freshdata))  # No expiration time needed
+            print("Fresh data fetched and cached.")
+        else:
+            print("Failed to fetch fresh data.")
 
 if __name__ == '__main__':
-    url = "http://127.0.0.1:5000/duolingo"
-    time.sleep(1)
-    webbrowser.open(url)  
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    getStats()
+    #url = "http://127.0.0.1:5000/duolingo"
+    #time.sleep(1)
+    #webbrowser.open(url)  
+    #app.run(host="127.0.0.1", port=5000, debug=True)
