@@ -35,7 +35,7 @@ def scrap_div():
     options = Options()
     #options.headless = False
     #options.binary_location = "/usr/bin/google-chrome" 
-    options.add_argument("--headless=new")
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")  
     options.add_argument("--disable-dev-shm-usage")  
     options.add_argument("--remote-debugging-port=9222")  
@@ -57,6 +57,7 @@ def scrap_div():
     try:
         print("Opening Duolingo website...")
         driver.get("https://www.duolingo.com")
+        wait = WebDriverWait(driver, 15)
 
         print("Clicking 'Already have an account' button...")
         account = WebDriverWait(driver, 10).until(
@@ -64,37 +65,34 @@ def scrap_div():
         )
         account.click()
 
-        time.sleep(3)
+        time.sleep(10)
 
         print("Waiting for email input field...")
-        email = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='email-input']"))
-            )
-        password = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='password-input']"))
-        )
-        actions = ActionChains(driver)
+        email = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='email-input']")))
+        password = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='password-input']")))
 
-        actions.move_to_element(email).click().perform()
+        # Click and enter email
+        ActionChains(driver).move_to_element(email).click().perform()
         time.sleep(5)
+        email.clear()
         email.send_keys(DUOLINGO_EMAIL)
-        time.sleep(10)
         driver.execute_script("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", email)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", email)
-        time.sleep(10)
-        actions.move_to_element(password).click().perform()
         time.sleep(5)
+
+        # Click and enter password
+        print("Waiting for password input field...")
+        ActionChains(driver).move_to_element(password).click().perform()
+        time.sleep(5)
+        password.clear()
         password.send_keys(DUOLINGO_PASSWORD)
-        time.sleep(10)
         driver.execute_script("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", password)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", password)
-        time.sleep(10)
-        #password.send_keys(Keys.RETURN) 
-        login_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='register-button']"))
-        )
+        time.sleep(5)
 
-        ActionChains(driver).move_to_element(login_button).click().perform()
+        # Click the login button instead of pressing Enter
+        login_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='register-button']")))
+        login_button.click()
 
         time.sleep(10)
         print("Logged in, waiting for profile tab...")
