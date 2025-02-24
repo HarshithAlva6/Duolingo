@@ -42,9 +42,6 @@ jobs:
         run: |
           chmod +x ./ChromeDriver/chromedriver.exe 
 
-      - name: Check Redis health status
-        run: redis-cli -h 127.0.0.1 -p 6379 ping
-        
       - name: Run Scraper Script
         env:
           DUOLINGO_EMAIL: ${{ secrets.DUOLINGO_EMAIL }}
