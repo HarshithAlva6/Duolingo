@@ -50,7 +50,6 @@ def scrap_div():
     #service = Service(executable_path="/usr/local/bin/chromedriver")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
-    driver.delete_all_cookies()
 
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
@@ -82,10 +81,11 @@ def scrap_div():
         # Trigger 'input' event (sufficient for most cases)
         driver.execute_script("arguments[0].dispatchEvent(new Event('input'));", email)
         driver.execute_script("arguments[0].dispatchEvent(new Event('input'));", password)
-
+        time.sleep(10)
         # Optionally trigger 'change' event if needed (in cases where the form listens for change events)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change'));", email)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change'));", password)
+        time.sleep(10)
         password.send_keys(Keys.RETURN) 
 
         time.sleep(10)
