@@ -102,7 +102,7 @@ def scrap_div():
 
         # Click the login button
         login_button.click()
-
+        driver.save_screenshot("debug_after_click.png")
         # Wait for page to load
         WebDriverWait(driver, 40).until(lambda d: d.execute_script("return document.readyState") == "complete")
 
