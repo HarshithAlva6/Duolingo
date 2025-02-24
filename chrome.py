@@ -34,6 +34,7 @@ def scrap_div():
     options = Options()
     #options.headless = True
     options.binary_location = "/usr/bin/google-chrome" 
+    options.add_argument("--headless")  
     options.add_argument("--no-sandbox")  
     options.add_argument("--disable-dev-shm-usage")  
     options.add_argument("--remote-debugging-port=9222")  
@@ -80,12 +81,12 @@ def scrap_div():
 
         print("Logged in, waiting for profile tab...")
         profile_link = WebDriverWait(driver, 20).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-test='profile-tab']"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='profile-tab']"))
         )
         #profile_link = driver.find_element(By.CSS_SELECTOR, "[data-test='profile-tab']")  
         profile_link.click()
-        time.sleep(5)
-
+        time.sleep(10)
+        print("Got profile", profile_link)
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
         stats = soup.find_all("div", class_="_2Hzv5")  
