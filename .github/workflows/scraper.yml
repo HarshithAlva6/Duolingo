@@ -38,16 +38,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libxss1 \
-            libappindicator3-1 \
-            libindicator7 \
             fonts-liberation \
             libgbm1 \
-            libasound2 \
             libnspr4 \
             libnss3 \
+            xdg-utils \
             wget \
             curl \
-            unzip
+            unzip \
+            xvfb
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
