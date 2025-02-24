@@ -34,7 +34,6 @@ jobs:
       - name: Set Up Chromedriver from Repo
         run: |
           chmod +x ./ChromeDriver/chromedriver.exe 
-          sudo ln -s $PWD/ChromeDriver/chromedriver.exe /usr/bin/chromedriver
 
       - name: Run Scraper Script
         env:
