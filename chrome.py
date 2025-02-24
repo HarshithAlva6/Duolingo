@@ -89,7 +89,12 @@ def scrap_div():
         driver.execute_script("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", password)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", password)
         time.sleep(10)
-        password.send_keys(Keys.RETURN) 
+        #password.send_keys(Keys.RETURN) 
+        login_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='register-button']"))
+        )
+
+        ActionChains(driver).move_to_element(login_button).click().perform()
 
         time.sleep(10)
         print("Logged in, waiting for profile tab...")
