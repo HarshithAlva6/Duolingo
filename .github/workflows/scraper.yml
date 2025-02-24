@@ -56,7 +56,6 @@ jobs:
         run: |
           google-chrome --version
           chromedriver --version
-          which google-chrome
           sudo chmod +x /usr/bin/chromedriver
           sudo chmod +x /usr/bin/google-chrome
 
@@ -66,3 +65,12 @@ jobs:
           DUOLINGO_PASSWORD: ${{ secrets.DUOLINGO_PASSWORD }}
         run: |
           python chrome.py
+
+      - name: Commit and push the updated stats.json to gh-pages
+        run: |
+          git checkout gh-pages
+          cp path/to/generated/stats.json ./stats.json  # Replace with correct path
+          git add stats.json
+          git commit -m "Updated stats.json"
+          git push origin gh-pages
+
