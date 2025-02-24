@@ -56,6 +56,9 @@ jobs:
         run: |
           google-chrome --version
           chromedriver --version
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+          sudo rm -rf /home/runner/snap/chromium/common/.cache
 
       - name: Run Scraper Script
         env:
