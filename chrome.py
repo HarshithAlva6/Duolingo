@@ -1,11 +1,12 @@
 from selenium import webdriver
-#from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+from webdriver_manager.chrome import ChromeDriverManager
 import os
 import redis
 #import webbrowser
@@ -32,7 +33,7 @@ def past_midnight(time):
 def scrap_div():
     options = Options()
     #options.headless = True
-    #options.binary_location = "/usr/bin/google-chrome" 
+    options.binary_location = "/usr/bin/google-chrome" 
     options.add_argument("--headless")  
     options.add_argument("--no-sandbox")  
     options.add_argument("--disable-dev-shm-usage")  
@@ -44,7 +45,8 @@ def scrap_div():
     #chromedriver_path = "./ChromeDriver/chromedriver.exe" 
 
     #service = Service(executable_path="/usr/local/bin/chromedriver")
-    driver = webdriver.Chrome(options=options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
 
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")

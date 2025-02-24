@@ -5,3 +5,4 @@ python-dotenv==1.0.1
 #Flask-Cors==5.0.0
 redis==5.2.1
 pytz==2024.2
+webdriver-manager
