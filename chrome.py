@@ -31,7 +31,7 @@ def past_midnight(time):
 
 def scrap_div():
     options = Options()
-    options.headless = True 
+    options.headless = False 
     load_dotenv(override=True)
 
     chromedriver_path = "./ChromeDriver/chromedriver.exe" 
@@ -43,7 +43,10 @@ def scrap_div():
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
 
     try:
+        print("Opening Duolingo website...")
         driver.get("https://www.duolingo.com")
+
+        print("Clicking 'Already have an account' button...")
         account = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='have-account']"))
         )
@@ -51,6 +54,7 @@ def scrap_div():
 
         time.sleep(3)
 
+        print("Waiting for email input field...")
         email = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='email-input']"))
             )
@@ -66,6 +70,7 @@ def scrap_div():
 
         time.sleep(10)
 
+        print("Logged in, waiting for profile tab...")
         profile_link = driver.find_element(By.CSS_SELECTOR, "[data-test='profile-tab']")  
         profile_link.click()
         time.sleep(5)
@@ -76,6 +81,7 @@ def scrap_div():
         stats_html = [str(div) for div in stats]
         #for idx, div in enumerate(stats, start=1):
         #    print(div.get_text(strip=True))
+        print("Successfully fetched stats.")
         return stats_html
     except Exception as e:
         print(f"Error: {e}")
@@ -83,6 +89,7 @@ def scrap_div():
     
     finally:
         driver.quit() 
+        print("Driver closed.")
 
 @app.route('/duolingo', methods=['GET'])
 def getStats():
