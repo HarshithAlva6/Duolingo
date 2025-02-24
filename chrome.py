@@ -44,6 +44,7 @@ def scrap_div():
     options.add_argument("--start-maximized")
     options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
     options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--incognito")
     load_dotenv(override=True)
 
     #chromedriver_path = "./ChromeDriver/chromedriver.exe" 
@@ -52,7 +53,7 @@ def scrap_div():
     #service = Service(executable_path="/usr/local/bin/chromedriver")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
-
+    driver.delete_all_cookies()
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
     try:
