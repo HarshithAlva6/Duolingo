@@ -34,9 +34,9 @@ def scrap_div():
     options.headless = True
     load_dotenv(override=True)
 
-    chromedriver_path = "./ChromeDriver/chromedriver.exe" 
+    #chromedriver_path = "./ChromeDriver/chromedriver.exe" 
 
-    service = Service(executable_path=chromedriver_path)
+    service = Service(executable_path="/usr/local/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=options)
 
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
