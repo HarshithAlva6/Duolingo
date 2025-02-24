@@ -32,7 +32,7 @@ def past_midnight(time):
 
 def scrap_div():
     options = Options()
-    #options.headless = True
+    options.headless = False
     options.binary_location = "/usr/bin/google-chrome" 
     options.add_argument("--headless")  
     options.add_argument("--no-sandbox")  
@@ -79,15 +79,19 @@ def scrap_div():
 
         time.sleep(10)
 
+        print("Logged in, waiting for full page...")
+        WebDriverWait(driver, 30).until(
+            lambda d: d.execute_script('return document.readyState') == 'complete'
+        )
         print("Logged in, waiting for profile tab...")
         try:
             profile_link = WebDriverWait(driver, 40).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='profile-tab']"))
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-test='profile-tab']"))
             )
+            profile_link.click()
         except Exception as e:
             print("Profile tab not found in time", e)
         #profile_link = driver.find_element(By.CSS_SELECTOR, "[data-test='profile-tab']")  
-        profile_link.click()
         time.sleep(10)
         print("Got profile", profile_link)
         soup = BeautifulSoup(driver.page_source, "html.parser")
