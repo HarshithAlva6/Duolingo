@@ -53,10 +53,10 @@ def scrap_div():
     #chromedriver_path = "./ChromeDriver/chromedriver.exe" 
     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     options.add_argument(f"user-agent={user_agent}")
-    options.add_argument(r"user-data-dir=C:\Users\harsh\AppData\Local\Google\Chrome\User Data\Default")
+    #options.add_argument(r"user-data-dir=C:\Users\harsh\AppData\Local\Google\Chrome\User Data\Default")
     #service = Service(executable_path="/usr/local/bin/chromedriver")
     service = Service(ChromeDriverManager().install())
-    driver = uc.Chrome(service=service, options=options, use_subprocess=True)
+    driver = uc.Chrome(service=service, options=options, headless=True)
     driver.delete_all_cookies()
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
