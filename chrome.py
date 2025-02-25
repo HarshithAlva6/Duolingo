@@ -18,8 +18,7 @@ import pytz
 import time
 import json
 import random
-from selenium.webdriver.common.action_chains import ActionChains
-import undetected_chromedriver as uc
+#from selenium.webdriver.common.action_chains import ActionChains
 
 
 #app = Flask(__name__)
@@ -33,11 +32,21 @@ def past_midnight(time):
     midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
     return update < midnight
 
+def random_typing_delay(min_delay=0.1, max_delay=0.5):
+    """Generate a random typing delay between key presses."""
+    return random.uniform(min_delay, max_delay)
+
+def random_input(element, text):
+    """Type text into an input field with randomized delays between key presses."""
+    for char in text:
+        element.send_keys(char)
+        time.sleep(random_typing_delay())
+
 def scrap_div():
-    options = uc.ChromeOptions()
+    options = Options()
     #options.headless = False
     #options.binary_location = "/usr/bin/google-chrome" 
-    #options.add_argument("--headless")
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")  
     options.add_argument("--disable-dev-shm-usage")  
     options.add_argument("--remote-debugging-port=9222")  
@@ -47,7 +56,6 @@ def scrap_div():
     options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
     options.add_argument("--disable-software-rasterizer")
     options.add_argument("--incognito")
-    options.add_argument("--disable-blink-features=AutomationControlled")  
     load_dotenv(override=True)
 
     #chromedriver_path = "./ChromeDriver/chromedriver.exe" 
@@ -56,7 +64,7 @@ def scrap_div():
     #options.add_argument(r"user-data-dir=C:\Users\harsh\AppData\Local\Google\Chrome\User Data\Default")
     #service = Service(executable_path="/usr/local/bin/chromedriver")
     service = Service(ChromeDriverManager().install())
-    driver = uc.Chrome(service=service, options=options, headless=True)
+    driver = webdriver.Chrome(service=service, options=options)
     driver.delete_all_cookies()
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
@@ -72,9 +80,6 @@ def scrap_div():
         account.click()
 
         time.sleep(10)
-        actions = ActionChains(driver)
-        for _ in range(10):
-            actions.move_by_offset(random.randint(-10, 10), random.randint(-10, 10)).perform()
 
         print("Waiting for email input field...")
         email = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='email-input']")))
@@ -88,9 +93,10 @@ def scrap_div():
         driver.execute_script("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", email)
 
         #password.send_keys(DUOLINGO_PASSWORD)
-        for char in DUOLINGO_PASSWORD:
-            password.send_keys(char)
-            time.sleep(0.3)
+        #for char in DUOLINGO_PASSWORD:
+            #password.send_keys(char)
+        random_input(password, DUOLINGO_PASSWORD)
+        time.sleep(0.3)
         WebDriverWait(driver, 10).until(lambda driver: password.get_attribute("value") == DUOLINGO_PASSWORD)
 
         # Print password value for debugging
@@ -110,8 +116,12 @@ def scrap_div():
 
         login_button.click()
         driver.save_screenshot("debug_after_click.png")
-        WebDriverWait(driver, 40).until(lambda d: d.execute_script("return document.readyState") == "complete")
+        recaptcha_token = driver.execute_script("return document.getElementById('g-recaptcha-response').value;")
+        print(f"reCAPTCHA Token: {recaptcha_token}")
 
+        driver.execute_script("document.getElementById('g-recaptcha-response').value = arguments[0];", recaptcha_token)
+        login_button.submit() 
+        WebDriverWait(driver, 40).until(lambda d: d.execute_script("return document.readyState") == "complete")
         # Save a screenshot
         driver.save_screenshot("debug_after_login.png")
         print("Logged in successfully!")
