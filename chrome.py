@@ -116,6 +116,7 @@ def scrap_div():
 
         login_button.click()
         driver.save_screenshot("debug_after_click.png")
+        wait.until(EC.presence_of_element_located((By.ID, "g-recaptcha-response")))
         recaptcha_token = driver.execute_script("return document.getElementById('g-recaptcha-response').value;")
         print(f"reCAPTCHA Token: {recaptcha_token}")
 
