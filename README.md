@@ -9,3 +9,4 @@ Terminals (Run two) -
 1. > redis-server
 To confirm check : netstat -ano | findstr :6379
 2. > python chrome.py
+3. > pip install undetected-chromedriver

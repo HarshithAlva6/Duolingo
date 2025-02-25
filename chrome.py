@@ -17,7 +17,9 @@ from datetime import datetime
 import pytz
 import time
 import json
+import random
 from selenium.webdriver.common.action_chains import ActionChains
+import undetected_chromedriver as uc
 
 
 #app = Flask(__name__)
@@ -32,10 +34,10 @@ def past_midnight(time):
     return update < midnight
 
 def scrap_div():
-    options = Options()
+    options = uc.ChromeOptions()
     #options.headless = False
     #options.binary_location = "/usr/bin/google-chrome" 
-    options.add_argument("--headless")
+    #options.add_argument("--headless")
     options.add_argument("--no-sandbox")  
     options.add_argument("--disable-dev-shm-usage")  
     options.add_argument("--remote-debugging-port=9222")  
@@ -45,6 +47,7 @@ def scrap_div():
     options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
     options.add_argument("--disable-software-rasterizer")
     options.add_argument("--incognito")
+    options.add_argument("--disable-blink-features=AutomationControlled")  
     load_dotenv(override=True)
 
     #chromedriver_path = "./ChromeDriver/chromedriver.exe" 
@@ -53,7 +56,7 @@ def scrap_div():
     options.add_argument(r"user-data-dir=C:\Users\harsh\AppData\Local\Google\Chrome\User Data\Default")
     #service = Service(executable_path="/usr/local/bin/chromedriver")
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = uc.Chrome(service=service, options=options, use_subprocess=True)
     driver.delete_all_cookies()
     DUOLINGO_EMAIL = os.getenv("DUOLINGO_EMAIL")
     DUOLINGO_PASSWORD = os.getenv("DUOLINGO_PASSWORD")
@@ -69,6 +72,9 @@ def scrap_div():
         account.click()
 
         time.sleep(10)
+        actions = ActionChains(driver)
+        for _ in range(10):
+            actions.move_by_offset(random.randint(-10, 10), random.randint(-10, 10)).perform()
 
         print("Waiting for email input field...")
         email = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='email-input']")))
@@ -81,7 +87,10 @@ def scrap_div():
         driver.execute_script("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", email)
         driver.execute_script("arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", email)
 
-        password.send_keys(DUOLINGO_PASSWORD)
+        #password.send_keys(DUOLINGO_PASSWORD)
+        for char in DUOLINGO_PASSWORD:
+            password.send_keys(char)
+            time.sleep(0.3)
         WebDriverWait(driver, 10).until(lambda driver: password.get_attribute("value") == DUOLINGO_PASSWORD)
 
         # Print password value for debugging
